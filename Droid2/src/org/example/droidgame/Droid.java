@@ -99,8 +99,8 @@ public class Droid extends ActorBase
     public void execute(DroidType type,int textureId)
     {
         initialize();
-        this.x = x;
-        this.y = y;
+        this.x = type.getPoint();
+        this.y = 0;
 
         // ˆÚ“®‘¬“x‚ðƒ‰ƒ“ƒ_ƒ€‚Å
         speedX = (((float) Math.random()) - 0.5f) * RAND_SPEED;
