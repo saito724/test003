@@ -9,6 +9,7 @@ import org.example.shootinggame.R;
 
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.android.apis.graphics.spritetext.LabelMaker;
@@ -188,12 +189,9 @@ public class DroidGame extends GameBase
                 {
                 	droids[i].update();
 
-                    // âÊñ í[Ç∆íÜâõÇ©ÇÁè„Ç≈íµÇÀï‘ÇÈ
-                    if (droids[i].x < 0 || droids[i].x > surfaceWidth)
-                    	droids[i].speedX = -droids[i].speedX;
-                    if (droids[i].y < surfaceHeight / 2
-                            || droids[i].y > surfaceHeight)
-                    	droids[i].speedY = -droids[i].speedY;
+                    if (droids[i].y + droids[i].getSize()/2 > surfaceHeight)
+                    	droids[i].decLife();
+                    Log.d("doid", droids[i].getPoint()+"");
                 }
             }
 

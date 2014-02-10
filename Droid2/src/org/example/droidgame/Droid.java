@@ -24,14 +24,12 @@ public class Droid extends ActorBase
     private static final float MIN_SPEED = 2.0f;
     private static final float RAND_SPEED = 8.0f;
     public float speedX, speedY;
-    // Enemyのライフ
-    private static final int MAX_LIFE = 12;
-    public int life;
+
     
     //ポイント（得点）
     private int point;
-    private DroidType type;
-    
+
+    private int textureId;
 
     /* ショット */
     // ショット発射のためのカウンタ
@@ -68,13 +66,6 @@ public class Droid extends ActorBase
         initialize();
     }
 
-    public void setType(DroidType type){
-    	
-    	this.size = type.getSize();
-    	this.point = type.getPoint();
-    	
-    }
-    
     /**
      * 初期化
      */
@@ -82,7 +73,6 @@ public class Droid extends ActorBase
     {
         speedX = 0.0f;
         speedY = 0.0f;
-        life = MAX_LIFE;
         shotCounter = 0;
         isDeathState = false;
         scaleX = 1.0f;
@@ -99,13 +89,13 @@ public class Droid extends ActorBase
     public void execute(DroidType type,int textureId)
     {
         initialize();
-        this.x = type.getPoint();
+        this.x = 0;
         this.y = 0;
+        this.size = type.getSize();
+        this.textureId = textureId;
+        this.point = type.getPoint();
 
-        // 移動速度をランダムで
-        speedX = (((float) Math.random()) - 0.5f) * RAND_SPEED;
-        speedX = speedX >= 0 ? speedX + MIN_SPEED : speedX - MIN_SPEED;
-        speedY = (float) Math.random() * RAND_SPEED / 4 + MIN_SPEED;
+        speedY =  type.getSpeed();
         isAlive = true;
     }
 
@@ -118,14 +108,12 @@ public class Droid extends ActorBase
     {
         if (!isDeathState)
         {
-            life--;
-            if (life <= 0)
-            {
+
                 isDeathState = true;
 
                 // 効果音再生
                 soundPlayer.playSE(R.raw.se_death_enemy);
-            }
+
         }
         return isDeathState;
     }
@@ -139,7 +127,7 @@ public class Droid extends ActorBase
         if (!isDeathState)
         {
             // 座標を更新
-            x += speedX;
+
             y += speedY;
 
 //            // ショット発射処理
@@ -166,12 +154,26 @@ public class Droid extends ActorBase
     }
 
     /**
-     * @Override 毎フレームの描画処理
+     *  毎フレームの描画処理
      */
-    public void draw(GL10 gl, int tex_id)
+    public void draw(GL10 gl)
     {
-        TextureDrawer.drawTexture(gl, tex_id, (int) x, (int) (y + addY),
-                TEXTURE_WIDTH, TEXTURE_HEIGHT, 0.0f, scaleX, scaleY);
+        draw(gl, textureId);
     }
+
+	@Override
+	public void draw(GL10 gl, int tex_id) {
+        TextureDrawer.drawTexture(gl, textureId,(int) x, (int) (y + addY),
+                TEXTURE_WIDTH, TEXTURE_HEIGHT, 0.0f, scaleX, scaleY);
+		
+	}
+
+	public int getPoint() {
+		return point;
+	}
+
+	public float getSize() {
+		return size;
+	}
 
 }
